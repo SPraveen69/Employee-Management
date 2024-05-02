@@ -18,7 +18,7 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpPost]
-        [Route("Register")]
+        [Route("RegisterUser")]
         public Status RegisterUser(Employee employee)
         {
             Status status = new Status();
@@ -28,7 +28,7 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpPost]
-        [Route("Login")]
+        [Route("LoginUser")]
         public Status LoginUser(Employee employee)
         {
             Status status = new Status();
