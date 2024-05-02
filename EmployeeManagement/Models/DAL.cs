@@ -16,14 +16,12 @@ namespace EmployeeManagement.Models
                 cmd.Parameters.AddWithValue("@Username", employee.Username);
                 cmd.Parameters.AddWithValue("@Name", employee.Name);
                 cmd.Parameters.AddWithValue("@Password", employee.Password);
-                cmd.Parameters.AddWithValue("@Department", employee.Department);
-                cmd.Parameters.AddWithValue("@Qualification", employee.Qualification);
-                cmd.Parameters.Add("@ErrorMessage", System.Data.SqlDbType.Char, 200);
-                cmd.Parameters["@ErrorMessage"].Direction = System.Data.ParameterDirection.Output;
+                SqlParameter errorMessageParam =  cmd.Parameters.Add("@ErrorMessage", System.Data.SqlDbType.Char, 200);
+                errorMessageParam.Direction = System.Data.ParameterDirection.Output;
                 conn.Open();
                 int i = cmd.ExecuteNonQuery();
                 conn.Close();
-                string msg = (string)cmd.Parameters["ErrorMessage"].Value;
+                string msg = errorMessageParam.Value.ToString();
                 if (i > 0)
                 {
                     status.StatusCode = 200;
