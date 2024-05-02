@@ -29,11 +29,11 @@ namespace EmployeeManagement.Controllers
 
         [HttpPost]
         [Route("LoginUser")]
-        public Status LoginUser(Employee employee)
+        public Status LoginUser(EmployeeDto employeeDto)
         {
             Status status = new Status();
             DAL dal = new DAL();
-            dal.Login(employee, conn);
+            status = dal.Login(employeeDto, conn);
             return status;
         }
     }

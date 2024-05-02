@@ -64,7 +64,8 @@
             Username: $('#logUsername').val(),
             Password: $('#logPssword').val()
         }
-
+        console.log($('#logUsername').val());
+        console.log($('#logPssword').val());
         $.ajax({
             type: 'POST',
             dataType: 'json',
@@ -73,7 +74,11 @@
             contentType: 'application/json; charset=uft-8',
             success: function (result) {
                 console.log(result);
-                if (result.statusCode == 200) {
+                if (result.statusCode === 200) {
+                    window.location.href = "/Home/Dashboard";
+                }
+                else
+                {
                     $('#msg').html(result.statusMessage);
                     $('#msg').show();
                 }

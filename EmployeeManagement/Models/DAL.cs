@@ -40,10 +40,11 @@ namespace EmployeeManagement.Models
                 status.StatusCode = 500;
                 status.StatusMessage = ex.Message;
             }
+           
            return status;
         }
 
-        public Status Login(Employee employee, SqlConnection conn)
+        public Status Login(EmployeeDto employee, SqlConnection conn)
         {
             Status status = new Status();
             try
@@ -70,6 +71,7 @@ namespace EmployeeManagement.Models
                 status.StatusCode = 500;
                 status.StatusMessage = ex.Message;
             }
+            Console.WriteLine(status);
             return status;
         
         
