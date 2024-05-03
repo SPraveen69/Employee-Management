@@ -8,6 +8,44 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <script>
+    $(document).ready(function () {
+        // Sample data for departments
+        var departments = ["HR", "IT", "Finance", "Marketing"];
+
+        // Sample data for qualifications
+        var qualifications = ["Bachelor's", "Master's", "PhD"];
+
+        // Function to populate the department dropdown
+        function populateDepartments() {
+            var departmentDropdown = document.getElementById("department");
+            departmentDropdown.innerHTML = ""; // Clear existing options
+            departments.forEach(function (department) {
+                var option = document.createElement("option");
+                option.text = department;
+                option.value = department;
+                departmentDropdown.add(option);
+            });
+        }
+
+        // Function to populate the qualification dropdown
+        function populateQualifications() {
+            var qualificationDropdown = document.getElementById("qualification");
+            qualificationDropdown.innerHTML = ""; // Clear existing options
+            qualifications.forEach(function (qualification) {
+                var option = document.createElement("option");
+                option.text = qualification;
+                option.value = qualification;
+                qualificationDropdown.add(option);
+            });
+        }
+
+        $('#createRecordModal').on('shown.bs.modal', function () {
+            populateDepartments();
+            populateQualifications();
+        });
+    });
+
+
     function editRecords() {
         $("#editRecordModal").modal();
         console.log("Edit button clicked");
@@ -19,7 +57,48 @@
     }
 
     function saveRecords() {
-        // Add your save record functionality here
+        
+        var empId = $'#empId').val();
+        var name = $('#name').val();
+        var email = $('#email').val();
+        var department = $('#department').val();
+        var qualification = $('#qualification').val();
+
+        if(empId == "" || name == "" || email == "" || department == "" || qualification == "")
+        {
+            $('#message1').hide();
+            $('#message2').show();
+            return false;
+        
+        }
+
+        var obj = {
+            EmpId : empId,
+            Name : name,
+            Email : email,
+            Department : department,
+            Qualification : qualification   
+        }
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: '/api/Employee/InsertUser',
+            data: JSON.stringify(obj),
+            contentType: 'application/json; charset=uft-8',
+            success: function(result){
+                console.log(result);
+                if(result.statusCode === 200){
+                    $('#successmessage').html(result.statusMessage);
+                    $('#message1').show();
+                    $('#message2').hide();
+                    $('#Insertion')[0].reset();
+                }
+            },
+            error: function(result){
+            console.log(result)
+            }
+        })
         console.log("Save changes button clicked");
     }
 
@@ -27,7 +106,18 @@
         $("#createRecordModal").modal();
         console.log("Create New Record button clicked");
     }
+    function saveEditedRecord() {
+        // Add your save edited record functionality here
+        console.log("Save changes button clicked in edit modal");
+    }
 
+    function confirmDeleteRecord() {
+        // Add your delete record confirmation functionality here
+        console.log("Delete button clicked in delete modal");
+    }
+
+
+    
 </script>
 
 
@@ -56,8 +146,8 @@
             <td>Data 4</td>
             <td>Data 5</td>
             <td>
-                <button type="button" class="btn btn-primary btn-sm" onclick="editRecords()">Edit</button>
-                <button type="button" class="btn btn-danger btn-sm" onclick="deleteRecords()">Delete</button>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editRecordModal" onclick="editRecords()">Edit</button>
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteRecordModal" onclick="deleteRecords()">Delete</button>
             </td>
         </tr>
     </tbody>
@@ -73,28 +163,49 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
+            <div id="message1">
+                <div class="alert alert-success">
+                    <span class="glyphicon glyphicon-ok"></span><strong>
+                        Success Message!
+                        <br />
+                        <p id="successmessage">send an email to your email address with confirmation link!</p>
+                    </strong>
+                </div>
+            </div>
+            <div id="message2">
+                <div class="alert alert-danger">
+                    <span class="glyphicon glyphicon-remove"></span><strong id="errormessage">Error Message! Registration not Completed! </strong>
+                </div>
+            </div>
             <div class="modal-body">
                 <!-- Form fields for creating a new record -->
-                <div class="form-group">
-                    <label for="inputColumn1">Emp Id</label>
-                    <input type="text" class="form-control" id="inputColumn1">
-                </div>
-                <div class="form-group">
-                    <label for="inputColumn1">Name</label>
-                    <input type="text" class="form-control" id="inputColumn1">
-                </div>
-                <div class="form-group">
-                    <label for="inputColumn2">email</label>
-                    <input type="text" class="form-control" id="inputColumn2">
-                </div>
-                <div class="form-group">
-                    <label for="inputColumn3">Department</label>
-                    <input type="text" class="form-control" id="inputColumn3">
-                </div>
-                <div class="form-group">
-                    <label for="inputColumn4">Qualification</label>
-                    <input type="text" class="form-control" id="inputColumn4">
-                </div>
+                <form id="Insertion">
+                    <div class="form-group">
+                        <label for="inputColumn1">Emp Id</label>
+                        <input type="text" class="form-control" id="empId">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputColumn1">Name</label>
+                        <input type="text" class="form-control" id="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputColumn2">email</label>
+                        <input type="text" class="form-control" id="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <select class="form-control" id="department">
+                            <!-- Options for department dropdown will be populated dynamically using JavaScript -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="qualification">Qualification</label>
+                        <select class="form-control" id="qualification">
+                            <!-- Options for qualification dropdown will be populated dynamically using JavaScript -->
+                        </select>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -105,7 +216,7 @@
 </div>
 
 <!-- Modal for Editing new record -->
-<div class="modal fade" id="editRecordModal" tabindex="-1" role="dialog" aria-labelledby="createRecordModalLabel" aria-hidden="true">
+<div class="modal fade" id="editRecordModal" tabindex="-1" role="dialog" aria-labelledby="editRecordModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -135,7 +246,28 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="saveRecords()">Save changes</button>
+                <button type="button" class="btn btn-primary" onclick="saveEditedRecord()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for deleting record -->
+<div class="modal fade" id="deleteRecordModal" tabindex="-1" role="dialog" aria-labelledby="deleteRecordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteRecordModalLabel">Delete Record</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this record?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDeleteRecord()">Delete</button>
             </div>
         </div>
     </div>

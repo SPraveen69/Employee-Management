@@ -36,5 +36,15 @@ namespace EmployeeManagement.Controllers
             status = dal.Login(employeeDto, conn);
             return status;
         }
+
+        [HttpPost]
+        [Route("InsertUser")]
+        public Status InsertUser(EmployeeData employee)
+        {
+            Status status = new Status();
+            DAL dal = new DAL();
+            status = dal.InsertEmployee(employee, conn);
+            return status;
+        }
     }
 }

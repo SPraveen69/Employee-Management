@@ -76,5 +76,47 @@ namespace EmployeeManagement.Models
         
         
         }
+
+        public Status InsertEmployee(EmployeeData employee, SqlConnection conn)
+        {
+            Status status = new Status();
+            try
+            {
+                SqlCommand cmd = new SqlCommand("sp_insertion", conn);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@EmpId", employee.EmpId);
+                cmd.Parameters.AddWithValue("@Name", employee.Name);
+                cmd.Parameters.AddWithValue("@Email", employee.Email);
+                cmd.Parameters.AddWithValue("@Department", employee.Department);
+                cmd.Parameters.AddWithValue("@Qualification", employee.Qualification);
+
+                SqlParameter errorMsgParam = cmd.Parameters.Add("@ErrorMessage", System.Data.SqlDbType.Char, 200);
+                errorMsgParam.Direction = System.Data.ParameterDirection.Output;
+                conn.Open();
+                int i = cmd.ExecuteNonQuery();
+                conn.Close();
+                string msg = errorMsgParam.Value.ToString();
+                if (i > 0)
+                {
+                    status.StatusCode = 200;
+                    status.StatusMessage = msg;
+
+                }
+                else
+                {
+                    status.StatusCode = 200;
+                    status.StatusMessage = msg;
+                }
+            }
+            catch(Exception e)
+            {
+                status.StatusCode = 500;
+                status.StatusMessage = e.Message;
+            
+            }
+
+            return status;
+        
+        }
     }
 }
