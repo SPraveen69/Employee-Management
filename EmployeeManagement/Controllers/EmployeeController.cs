@@ -1,4 +1,5 @@
 ﻿using EmployeeManagement.Models;
+using EmployeeManagement.Models.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -44,6 +45,38 @@ namespace EmployeeManagement.Controllers
             Status status = new Status();
             DAL dal = new DAL();
             status = dal.InsertEmployee(employee, conn);
+            return status;
+        }
+
+        [HttpGet]
+        [Route("GetUsers")]
+        public IActionResult GetUsers()
+        {
+            Status status = new Status();
+            DAL dal = new DAL();
+            var employees = dal.GetEmployees(conn);
+            return Ok(employees);
+
+        }
+
+        [HttpPut]
+        [Route("UpdateUser")]
+        public Status UpdateUser(EmployeeDataDto employee)
+        {
+            Status status = new Status();
+            DAL dal = new DAL();
+            status = dal.UpdateEmployee(employee, conn);
+            return status;
+
+        }
+
+        [HttpDelete]
+        [Route("DeleteUser")]
+        public Status DeleteUser(int empId) 
+        {
+            Status status = new Status();
+            DAL dal = new DAL();
+            status = dal.DeleteEmployee(empId, conn);
             return status;
         }
     }
