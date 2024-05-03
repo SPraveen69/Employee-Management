@@ -231,5 +231,35 @@ namespace EmployeeManagement.Models
             }
             return status;
         }
+
+        public EmployeeData GetEmployeeById(int empId, SqlConnection conn)
+        {
+            EmployeeData employee = new EmployeeData();
+            try
+            {
+                SqlCommand cmd = new SqlCommand("sp_getEmployeeById", conn); 
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@EmpId", empId);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    employee.EmpId = (int)reader["EmpId"];
+                    employee.Name = reader["Name"].ToString();
+                    employee.Email = reader["Email"].ToString();
+                    employee.Department = reader["Department"].ToString();
+                    employee.Qualification = reader["Qualification"].ToString();
+                }
+                reader.Close();
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                // Handle exception
+                Console.WriteLine("Error: " + e.Message);
+            }
+            return employee;
+        }
     }
-}
+    }

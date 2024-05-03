@@ -8,50 +8,47 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <script>
-    
-   
-        // Function to fetch employee data from the API
-        function fetchEmployeeData() {
-            $.ajax({
-                url: '/api/Employee/GetUsers',
-                type: 'GET',
-                dataType: 'json',
-                success: function (response) {
-                    
-                    // Check if the response contains data
-                    if (response && response.length > 0) {
-                        // Clear existing table rows
-                        $('#employeeTableBody').empty();
+    function fetchEmployeeData() {
+        $.ajax({
+            url: '/api/Employee/GetUsers',
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
 
-                        // Iterate over the response data and generate table rows
-                        response.forEach(function (employee) {
-                            var newRow = '<tr>' +
-                                '<td>' + employee.empId + '</td>' +
-                                '<td>' + employee.name + '</td>' +
-                                '<td>' + employee.email + '</td>' +
-                                '<td>' + employee.department + '</td>' +
-                                '<td>' + employee.qualification + '</td>' +
-                                '<td>' +
-                                '<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editRecordModal">Edit</button>' +
-                                '<button type="button" class="btn btn-danger btn-sm" onclick="deleteRecord(' + employee.empId + ')">Delete</button>' +
-                                '</td>' +
-                                '</tr>';
+                // Check if the response contains data
+                if (response && response.length > 0) {
+                    // Clear existing table rows
+                    $('#employeeTableBody').empty();
 
-                            // Append the new row to the table body
-                            $('#employeeTableBody').append(newRow);
-                        });
-                    } else {
-                        // Display a message if there is no data
-                        $('#employeeTableBody').html('<tr><td colspan="4">No employee records found</td></tr>');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching employee data:', error);
+                    // Iterate over the response data and generate table rows
+                    response.forEach(function (employee) {
+                        var newRow = '<tr>' +
+                            '<td>' + employee.empId + '</td>' +
+                            '<td>' + employee.name + '</td>' +
+                            '<td>' + employee.email + '</td>' +
+                            '<td>' + employee.department + '</td>' +
+                            '<td>' + employee.qualification + '</td>' +
+                            '<td>' +
+                            '<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" onclick="editRecord(' + employee.empId + ')" data-target="#editRecordModal">Edit</button>' +
+                            '<button type="button" class="btn btn-danger btn-sm" onclick="deleteRecord(' + employee.empId + ')">Delete</button>' +
+                            '</td>' +
+                            '</tr>';
+
+                        // Append the new row to the table body
+                        $('#employeeTableBody').append(newRow);
+                    });
+                } else {
+                    // Display a message if there is no data
+                    $('#employeeTableBody').html('<tr><td colspan="4">No employee records found</td></tr>');
                 }
-            });
-        }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching employee data:', error);
+            }
+        });
+    }
 
-        fetchEmployeeData();
+    fetchEmployeeData();
 
     function deleteRecord(empId) {
         console.log(empId);
@@ -61,48 +58,65 @@
             dataType: 'json',
             success: function (result) {
                 console.log(result);
-                // Optionally, you can display a success message to the user
                 alert("Record deleted successfully!");
-                // Reload or update the table to reflect the changes
-                // For example, you can reload the page or fetch the updated data via AJAX
-                // window.location.reload(); // Reload the page
-                fetchEmployeeData(); // Fetch updated data via AJAX
+                fetchEmployeeData();
             },
             error: function (result) {
                 console.error(result);
-                // Handle any errors that occur during the deletion process
+
                 alert("Failed to delete record!");
             }
         });
     }
 
-    function editRecords() {
-        $("#editRecordModal").modal();
-        console.log("Edit button clicked");
+    function editRecord(empId) {
+
+        $.ajax({
+            url: '/api/Employee/GetEmployeeById/' + empId,
+            type: 'GET',
+            success: function (data) {
+                console.log(data.empId);
+                $('#inputId').val(data.empId);
+                $('#inputName').val(data.name);
+                $('#inputEmail').val(data.email);
+                $('#inputDepartment').val(data.department);
+                $('#inputQualification').val(data.qualification);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching employee data:', error);
+            }
+        });
     }
 
+
+
     function saveRecords() {
-        
+
         var empId = $('#empId').val();
         var name = $('#name').val();
         var email = $('#email').val();
         var department = $('#department').val();
         var qualification = $('#qualification').val();
 
-        if(empId == "" || name == "" || email == "" || department == "" || qualification == "")
-        {
+        if (empId == "" || name == "" || email == "" || department == "" || qualification == "") {
             $('#message1').hide();
             $('#message2').show();
             return false;
-        
+
+        }
+
+        if ($('#qualification').val() === 'Choose the Qualification' || $('#department').val() === 'Choose the Department') {
+            $('#message1').hide();
+            $('#message2').show();
+            return false;
         }
 
         var obj = {
-            EmpId : empId,
-            Name : name,
-            Email : email,
-            Department : department,
-            Qualification : qualification   
+            EmpId: empId,
+            Name: name,
+            Email: email,
+            Department: department,
+            Qualification: qualification
         }
 
         $.ajax({
@@ -111,17 +125,17 @@
             url: '/api/Employee/InsertUser',
             data: JSON.stringify(obj),
             contentType: 'application/json; charset=uft-8',
-            success: function(result){
+            success: function (result) {
                 console.log(result);
-                if(result.statusCode === 200){
+                if (result.statusCode === 200) {
                     $('#successmessage').html(result.statusMessage);
                     $('#message1').show();
                     $('#message2').hide();
                     $('#Insertion')[0].reset();
                 }
             },
-            error: function(result){
-            console.log(result)
+            error: function (result) {
+                console.log(result)
             }
         })
         console.log("Save changes button clicked");
@@ -129,16 +143,45 @@
 
     function createRecord() {
         $("#createRecordModal").modal();
-        console.log("Create New Record button clicked");
+        $('#message1').hide();
+        $('#message2').hide();
+
     }
     function saveEditedRecord() {
-        console.log("Save changes button clicked in edit modal");
+        var empId = $('#inputId').val();
+        var name = $('#inputName').val();
+        var email = $('#inputEmail').val();
+        var department = $('#inputDepartment').val();
+        var qualification = $('#inputQualification').val();
+
+        // Construct the object with updated data
+        var updatedData = {
+            EmpId: empId,
+            Name: name,
+            Email: email,
+            Department: department,
+            Qualification: qualification
+        };
+
+        $.ajax({
+            type: 'PUT',
+            dataType: 'json',
+            url: '/api/Employee/UpdateUser',
+            data: JSON.stringify(updatedData),
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                $('#editRecordModal').removeClass("in");
+                $('.modal-backdrop').remove();
+                $('#editRecordModal').hide();
+                fetchEmployeeData();
+            },
+            error: function (result) {
+                console.log(result);
+                alert('Failed to save changes. Please try again.');
+            }
+        });
+
     }
-
-   
-
-
-    
 </script>
 
 
@@ -160,17 +203,6 @@
         </tr>
     </thead>
     <tbody id="employeeTableBody">
-        @*<tr>
-            <td>Data 1</td>
-            <td>Data 2</td>
-            <td>Data 3</td>
-            <td>Data 4</td>
-            <td>Data 5</td>
-            <td>
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editRecordModal" onclick="editRecords()">Edit</button>
-                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteRecordModal" onclick="deleteRecords()">Delete</button>
-            </td>
-        </tr>*@
     </tbody>
 </table>
 
@@ -204,26 +236,37 @@
                 <form id="Insertion">
                     <div class="form-group">
                         <label for="inputColumn1">Emp Id</label>
-                        <input type="text" class="form-control" id="empId">
+                        <input type="text" class="form-control" placeholder="Employee ID" id="empId">
                     </div>
                     <div class="form-group">
                         <label for="inputColumn1">Name</label>
-                        <input type="text" class="form-control" id="name">
+                        <input type="text" class="form-control" placeholder="Employee Name" id="name">
                     </div>
                     <div class="form-group">
                         <label for="inputColumn2">email</label>
-                        <input type="text" class="form-control" id="email">
+                        <input type="text" class="form-control" placeholder="Employee Email" id="email">
                     </div>
                     <div class="form-group">
                         <label for="department">Department</label>
                         <select class="form-control" id="department">
-                            <!-- Options for department dropdown will be populated dynamically using JavaScript -->
+                            <option>Choose the Department </option>
+                            <option value="IT">IT</option>
+                            <option value="Finance">Finance</option>
+                            <option value="HR">HR</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Production">Production</option>
+                            <option value="Sales">Sales</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="qualification">Qualification</label>
                         <select class="form-control" id="qualification">
-                            <!-- Options for qualification dropdown will be populated dynamically using JavaScript -->
+                            <option>Choose the Qualification </option>
+                            <option value="High School">High School</option>
+                            <option value="Diploma">Diploma</option>
+                            <option value="BSc">BSc</option>
+                            <option value="MSc">MSc</option>
+                            <option value="PHD">PHD</option>
                         </select>
                     </div>
                 </form>
@@ -237,7 +280,7 @@
 </div>
 
 <!-- Modal for Editing new record -->
-<div class="modal fade" id="editRecordModal" tabindex="-1" role="dialog" aria-labelledby="editRecordModalLabel" aria-hidden="true">
+<div class="modal" id="editRecordModal" tabindex="-1" role="dialog" aria-labelledby="editRecordModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -249,20 +292,39 @@
             <div class="modal-body">
                 <!-- Form fields for edit record -->
                 <div class="form-group">
-                    <label for="inputColumn1">Name</label>
-                    <input type="text" class="form-control" id="inputColumn1">
+                    <label for="inputId">Emp Id</label>
+                    <input type="text" class="form-control" placeholder="Employee ID" id="inputId" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="inputColumn2">email</label>
-                    <input type="text" class="form-control" id="inputColumn2">
+                    <label for="inputName">Name</label>
+                    <input type="text" class="form-control" id="inputName">
                 </div>
                 <div class="form-group">
-                    <label for="inputColumn3">Department</label>
-                    <input type="text" class="form-control" id="inputColumn3">
+                    <label for="inputEmail ">email</label>
+                    <input type="text" class="form-control" id="inputEmail">
                 </div>
                 <div class="form-group">
-                    <label for="inputColumn4">Qualification</label>
-                    <input type="text" class="form-control" id="inputColumn4">
+                    <label for="inputDepartment">Department</label>
+                    <select class="form-control" id="inputDepartment">
+                        <option>Choose the Department </option>
+                        <option value="IT">IT</option>
+                        <option value="Finance">Finance</option>
+                        <option value="HR">HR</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Production">Production</option>
+                        <option value="Production">Production</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="inputQualification">Qualification</label>
+                    <select class="form-control" id="inputQualification">
+                        <option>Choose the Qualification </option>
+                        <option value="High School">High School</option>
+                        <option value="Diploma">Diploma</option>
+                        <option value="BSc">BSc</option>
+                        <option value="MSc">MSc</option>
+                        <option value="PHD">PHD</option>
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">
@@ -274,25 +336,6 @@
 </div>
 
 <!-- Modal for deleting record -->
-<div class="modal fade" id="deleteRecordModal" tabindex="-1" role="dialog" aria-labelledby="deleteRecordModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteRecordModalLabel">Delete Record</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this record?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" onclick="confirmDeleteRecord()">Delete</button>
-            </div>
-        </div>
-    </div>
-</div><!-- Modal for deleting record -->
 <div class="modal fade" id="deleteRecordModal" tabindex="-1" role="dialog" aria-labelledby="deleteRecordModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

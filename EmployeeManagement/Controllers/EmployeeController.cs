@@ -72,12 +72,29 @@ namespace EmployeeManagement.Controllers
 
         [HttpDelete]
         [Route("DeleteUser/{empId}")]
-        public Status DeleteUser(int empId) 
+        public Status DeleteUser(int empId)
         {
             Status status = new Status();
             DAL dal = new DAL();
             status = dal.DeleteEmployee(empId, conn);
             return status;
+        }
+
+        [HttpGet]
+        [Route("GetEmployeeById/{empId}")]
+        public IActionResult GetEmployeeById(int empId)
+        {
+            DAL dal = new DAL();
+            EmployeeData employee = dal.GetEmployeeById(empId, conn);
+
+            if (employee != null)
+            {
+                return Ok(employee);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
