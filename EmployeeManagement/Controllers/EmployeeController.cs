@@ -71,7 +71,7 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteUser")]
+        [Route("DeleteUser/{empId}")]
         public Status DeleteUser(int empId) 
         {
             Status status = new Status();

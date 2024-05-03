@@ -201,6 +201,7 @@ namespace EmployeeManagement.Models
             {
                 SqlCommand cmd = new SqlCommand("sp_deleteEmployee", conn);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("@EmpId", empId);
 
                 SqlParameter errorMsgParam = cmd.Parameters.Add("@ErrorMessage", System.Data.SqlDbType.Char, 200);
