@@ -8,44 +8,54 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <script>
+    
     $(document).ready(function () {
-        // Sample data for departments
-        var departments = ["HR", "IT", "Finance", "Marketing"];
+        // Function to fetch employee data from the API
+        function fetchEmployeeData() {
+            $.ajax({
+                url: '/api/Employee/GetUsers',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    
+                    // Check if the response contains data
+                    if (response && response.length > 0) {
+                        // Clear existing table rows
+                        $('#employeeTableBody').empty();
 
-        // Sample data for qualifications
-        var qualifications = ["Bachelor's", "Master's", "PhD"];
+                        // Iterate over the response data and generate table rows
+                        response.forEach(function (employee) {
+                            var newRow = '<tr>' +
+                                '<td>' + employee.empId + '</td>' +
+                                '<td>' + employee.name + '</td>' +
+                                '<td>' + employee.email + '</td>' +
+                                '<td>' + employee.department + '</td>' +
+                                '<td>' + employee.qualification + '</td>' +
+                                '<td>' +
+                                '<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editRecordModal">Edit</button>' +
+                                '<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteRecordModal">Delete</button>' +
+                                '</td>' +
+                                '</tr>';
 
-        // Function to populate the department dropdown
-        function populateDepartments() {
-            var departmentDropdown = document.getElementById("department");
-            departmentDropdown.innerHTML = ""; // Clear existing options
-            departments.forEach(function (department) {
-                var option = document.createElement("option");
-                option.text = department;
-                option.value = department;
-                departmentDropdown.add(option);
+                            // Append the new row to the table body
+                            $('#employeeTableBody').append(newRow);
+                        });
+                    } else {
+                        // Display a message if there is no data
+                        $('#employeeTableBody').html('<tr><td colspan="4">No employee records found</td></tr>');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching employee data:', error);
+                }
             });
         }
 
-        // Function to populate the qualification dropdown
-        function populateQualifications() {
-            var qualificationDropdown = document.getElementById("qualification");
-            qualificationDropdown.innerHTML = ""; // Clear existing options
-            qualifications.forEach(function (qualification) {
-                var option = document.createElement("option");
-                option.text = qualification;
-                option.value = qualification;
-                qualificationDropdown.add(option);
-            });
-        }
-
-        $('#createRecordModal').on('shown.bs.modal', function () {
-            populateDepartments();
-            populateQualifications();
-        });
+        // Call the fetchEmployeeData function when the page loads
+        fetchEmployeeData();
     });
-
-
+       
+    
     function editRecords() {
         $("#editRecordModal").modal();
         console.log("Edit button clicked");
@@ -58,7 +68,7 @@
 
     function saveRecords() {
         
-        var empId = $'#empId').val();
+        var empId = $('#empId').val();
         var name = $('#name').val();
         var email = $('#email').val();
         var department = $('#department').val();
@@ -138,8 +148,8 @@
             <th>Actions</th>
         </tr>
     </thead>
-    <tbody>
-        <tr>
+    <tbody id="employeeTableBody">
+        @*<tr>
             <td>Data 1</td>
             <td>Data 2</td>
             <td>Data 3</td>
@@ -149,7 +159,7 @@
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editRecordModal" onclick="editRecords()">Edit</button>
                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteRecordModal" onclick="deleteRecords()">Delete</button>
             </td>
-        </tr>
+        </tr>*@
     </tbody>
 </table>
 

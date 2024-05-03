@@ -61,7 +61,7 @@ namespace EmployeeManagement.Controllers
 
         [HttpPut]
         [Route("UpdateUser")]
-        public Status UpdateUser(EmployeeDataDto employee)
+        public Status UpdateUser(EmployeeData employee)
         {
             Status status = new Status();
             DAL dal = new DAL();

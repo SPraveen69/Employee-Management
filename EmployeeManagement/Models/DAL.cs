@@ -78,7 +78,7 @@ namespace EmployeeManagement.Models
         
         }
 
-        public Status GetEmployees(SqlConnection conn)
+        public List<EmployeeData> GetEmployees(SqlConnection conn)
         {
             List<EmployeeData> employees = new List<EmployeeData>();
 
@@ -153,7 +153,7 @@ namespace EmployeeManagement.Models
         
         }
 
-        public Status UpdateEmployee(EmployeeDataDto employee, SqlConnection conn)
+        public Status UpdateEmployee(EmployeeData employee, SqlConnection conn)
         {
             Status status = new Status();
             try
