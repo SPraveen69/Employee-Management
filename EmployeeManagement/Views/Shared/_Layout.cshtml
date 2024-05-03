@@ -8,6 +8,26 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EmployeeManagement.styles.css" asp-append-version="true" />
 </head>
+<style>
+    .navbar-brand {
+        font-size: 3rem; 
+        font-weight: bold;
+        color: #123
+    }
+
+    .navbar-nav .nav-item .nav-link {
+        color: #333; 
+        font-size: 1.5rem; 
+    }
+
+    .navbar-toggler {
+        border-color: #333;
+    }
+
+    .navbar-toggler-icon {
+        background-color: #333; 
+    }
+</style>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -20,7 +40,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"><u>Home</u></a>
                         </li>
                     </ul>
                 </div>
