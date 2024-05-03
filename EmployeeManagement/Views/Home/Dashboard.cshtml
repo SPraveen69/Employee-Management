@@ -3,7 +3,140 @@
 *@
 @{
 }
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<div>
-    Welcome User
+<script>
+    function editRecords() {
+        $("#editRecordModal").modal();
+        console.log("Edit button clicked");
+    }
+
+    function deleteRecords() {
+        // Add your delete record functionality here
+        console.log("Delete button clicked");
+    }
+
+    function saveRecords() {
+        // Add your save record functionality here
+        console.log("Save changes button clicked");
+    }
+
+    function createRecord() {
+        $("#createRecordModal").modal();
+        console.log("Create New Record button clicked");
+    }
+
+</script>
+
+
+<h2>Employee Records</h2>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createRecordModal" onclick="createRecord()">
+    Create New Record
+</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Emp ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Qualification</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Data 1</td>
+            <td>Data 2</td>
+            <td>Data 3</td>
+            <td>Data 4</td>
+            <td>Data 5</td>
+            <td>
+                <button type="button" class="btn btn-primary btn-sm" onclick="editRecords()">Edit</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteRecords()">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Modal for creating new record -->
+<div class="modal fade" id="createRecordModal" tabindex="-1" role="dialog" aria-labelledby="createRecordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createRecordModalLabel">Create New Record</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for creating a new record -->
+                <div class="form-group">
+                    <label for="inputColumn1">Emp Id</label>
+                    <input type="text" class="form-control" id="inputColumn1">
+                </div>
+                <div class="form-group">
+                    <label for="inputColumn1">Name</label>
+                    <input type="text" class="form-control" id="inputColumn1">
+                </div>
+                <div class="form-group">
+                    <label for="inputColumn2">email</label>
+                    <input type="text" class="form-control" id="inputColumn2">
+                </div>
+                <div class="form-group">
+                    <label for="inputColumn3">Department</label>
+                    <input type="text" class="form-control" id="inputColumn3">
+                </div>
+                <div class="form-group">
+                    <label for="inputColumn4">Qualification</label>
+                    <input type="text" class="form-control" id="inputColumn4">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveRecords()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Editing new record -->
+<div class="modal fade" id="editRecordModal" tabindex="-1" role="dialog" aria-labelledby="createRecordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editRecordModalLabel">Update Record</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for edit record -->
+                <div class="form-group">
+                    <label for="inputColumn1">Name</label>
+                    <input type="text" class="form-control" id="inputColumn1">
+                </div>
+                <div class="form-group">
+                    <label for="inputColumn2">email</label>
+                    <input type="text" class="form-control" id="inputColumn2">
+                </div>
+                <div class="form-group">
+                    <label for="inputColumn3">Department</label>
+                    <input type="text" class="form-control" id="inputColumn3">
+                </div>
+                <div class="form-group">
+                    <label for="inputColumn4">Qualification</label>
+                    <input type="text" class="form-control" id="inputColumn4">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveRecords()">Save changes</button>
+            </div>
+        </div>
+    </div>
 </div>
