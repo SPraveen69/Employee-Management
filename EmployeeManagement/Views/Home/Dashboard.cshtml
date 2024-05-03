@@ -22,6 +22,24 @@
     }
 </style>
 <script>
+    $(document).ready(function () {
+        // Add event listener to input field
+        $('#searchInput').on('input', function () {
+            var query = $(this).val().toLowerCase();
+
+            // Filter table rows based on search query
+            $('#employeeTableBody tr').each(function () {
+                var empId = $(this).find('td:nth-child(1)').text().toLowerCase();
+                var name = $(this).find('td:nth-child(2)').text().toLowerCase();
+
+                if (empId.includes(query) || name.includes(query)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
     function fetchEmployeeData() {
         $.ajax({
             url: '/api/Employee/GetUsers',
@@ -207,6 +225,10 @@
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createRecordModal" onclick="createRecord()">
                 Create New Record
             </button>
+        </div>
+        <div class="col-auto form-group has-search">
+            <span class="fa fa-search form-control-feedback" style="font-size: 16px;"></span>
+            <input type="text" class="form-control" id="searchInput" style="width: 200px;" placeholder="Search by name or ID">
         </div>
     </div>
 </div>
